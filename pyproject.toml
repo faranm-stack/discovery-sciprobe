@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sciprobe"
+version = "0.1.0"
+description = "Ground-truth and invariance evaluation for scientific AI agents (Microsoft Discovery)"
+requires-python = ">=3.10"
+dependencies = ["rdkit>=2023.9"]
+
+[project.optional-dependencies]
+azure = ["azure-identity>=1.15"]
+net = ["truststore>=0.9"]  # OS certificate store for TLS-inspecting corporate proxies
+test = ["pytest>=7"]
+
+[project.scripts]
+sciprobe = "sciprobe.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["sciprobe*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

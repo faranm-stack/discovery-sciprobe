@@ -93,6 +93,22 @@ def test_agent_map_renames_target():
     assert jobs and all(j.target == "my-psi4" and j.agent == "psi4" for j in jobs)
 
 
+def test_agent_map_file_and_replay_file(tmp_path, capsys):
+    from sciprobe.cli import _agent_map
+
+    f = tmp_path / "m.map"
+    f.write_text("# comment\nxyce = sim-xyce\n\ngwp-predictor=gwpPredictor  # trailing\n", encoding="utf-8")
+    assert _agent_map([f"@{f}", "psi4=p4"]) == {"xyce": "sim-xyce", "gwp-predictor": "gwpPredictor", "psi4": "p4"}
+    log = tmp_path / "one.jsonl"
+    log.write_text("\n".join(json.dumps(x) for x in [
+        {"kind": "header", "agentName": "mol-toolkit"},
+        {"kind": "message", "message": {"role": "user", "text": "MW of SMILES CC(=O)Oc1ccccc1C(=O)O ?"}},
+        {"kind": "message", "message": {"role": "agent", "text": "Formula C9H8O4, MW 250.0 g/mol", "agentName": "mol-toolkit"}},
+    ]), encoding="utf-8")
+    assert main(["factcheck", "--replay", str(log)]) == 0
+    assert "MISMATCH" in capsys.readouterr().out
+
+
 class FakeDiscovery:
     """Scripted Discovery data plane."""
 

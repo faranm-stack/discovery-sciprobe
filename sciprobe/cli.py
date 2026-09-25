@@ -21,8 +21,18 @@ def _csv(s: str | None) -> list[str] | None:
 
 
 def _agent_map(pairs: list[str] | None) -> dict[str, str]:
+    """``logical=deployed`` pairs; ``@path`` reads one pair per line (# comments allowed)."""
     out = {}
+    expanded: list[str] = []
     for p in pairs or []:
+        if p.startswith("@"):
+            for line in Path(p[1:]).read_text(encoding="utf-8-sig").splitlines():
+                line = line.split("#", 1)[0].strip()
+                if line:
+                    expanded.append(line)
+        else:
+            expanded.append(p)
+    for p in expanded:
         k, _, v = p.partition("=")
         if not v:
             raise SystemExit(f"--agent-map expects logical=deployed, got {p!r}")
@@ -192,7 +202,7 @@ def cmd_factcheck(args) -> int:
     if args.text:
         texts.append((args.text, Path(args.text).read_text(encoding="utf-8"), args.prompt))
     if args.replay is not None:
-        rp = ReplayAdapter(args.replay or None)
+        rp = ReplayAdapter([args.replay] if args.replay else None)
         for (agent, prompt), reps in rp._store.items():
             if args.agents and agent not in {a.lower() for a in _csv(args.agents)}:
                 continue

@@ -1,0 +1,6 @@
+﻿# Logical (catalog) agent name = deployed agent name in the RepoValidation project.
+# Use with:  sciprobe run --agent-map @agent-maps/repovalidation.map --agents mol-toolkit,core-python-agent,...
+# Agents whose deployed name equals the catalog id need no entry.
+core-python-agent = CorePythonAgent
+xyce = sim-xyce
+gwp-predictor = gwpPredictor

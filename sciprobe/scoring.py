@@ -11,6 +11,13 @@ from .extract import Extracted, extract
 from .model import AgentReply, Kind, OracleTask, Reference, Status, Verdict
 
 _FORMULA_TOKEN = re.compile(r"([A-Z][a-z]?)(\d*)")
+# Refusals caused by the platform (tool runner down, model files missing), not by the agent's science.
+_ENV_FAILURE = re.compile(
+    r"(backend|execution|environment|tool|runtime|compute)[^.]{0,40}(error|fail|unavailable)|"
+    r"(fail|error)[^.]{0,40}(backend|execution|environment|tool)|no trained .{0,30}model .{0,40}available|"
+    r"model artifacts?|internal error",
+    re.IGNORECASE,
+)
 
 
 def parse_formula(s: str) -> Counter:
@@ -132,6 +139,9 @@ def score_task(task: OracleTask, reply: AgentReply, agent: str) -> Verdict:
         return Verdict(status=Status.NO_ANSWER, score=0.0, expected=expected, got="", diagnosis="no parseable reply", **base)
 
     if ex.refused:
+        if _ENV_FAILURE.search(ex.reason or ""):
+            return Verdict(status=Status.ERROR, score=0.0, expected=expected, got="refused",
+                           diagnosis=f"environment: {ex.reason}", **base)
         return Verdict(status=Status.REFUSED, score=0.0, expected=expected, got="refused",
                        diagnosis=ex.reason or "declined", **base)
     if ex.value is None:

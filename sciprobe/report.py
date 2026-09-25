@@ -47,12 +47,14 @@ class AgentCard:
 
 
 def scorecards(result: RunResult) -> list[AgentCard]:
+    """Environment/transport errors are counted but excluded from the science score."""
     cards: dict[str, AgentCard] = defaultdict(lambda: AgentCard(""))
     for v in result.verdicts:
         c = cards[v.agent]
         c.agent = v.agent
         if v.status == Status.ERROR:
             c.errors += 1
+            continue
         if v.status in (Status.CORRECT_REFUSAL, Status.HALLUCINATED) or v.expected.startswith("refusal"):
             c.ctrl_n += 1
             c.ctrl_pass += int(v.status.ok)
@@ -63,10 +65,11 @@ def scorecards(result: RunResult) -> list[AgentCard]:
     for r in result.invariance:
         c = cards[r.agent]
         c.agent = r.agent
-        c.inv_n += 1
-        c.inv_pass += int(r.status == Status.PASS)
         if r.status == Status.ERROR:
             c.errors += 1
+            continue
+        c.inv_n += 1
+        c.inv_pass += int(r.status == Status.PASS)
     for o in result.open:
         c = cards[o["agent"]]
         c.agent = o["agent"]

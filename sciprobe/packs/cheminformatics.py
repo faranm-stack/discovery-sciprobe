@@ -71,7 +71,8 @@ def _props() -> list[PropSpec]:
                  Kind.FORMULA, None, rdMolDescriptors.CalcMolFormula),
         PropSpec("hbd", "How many Lipinski hydrogen-bond donors (the NHOH count: number of N-H and O-H bonds) does "
                  "the molecule with SMILES {smiles} have?", Kind.EXACT, None, Lipinski.NHOHCount,
-                 confusions=diff("RDKit NumHDonors definition used instead of Lipinski NHOH count", Lipinski.NumHDonors)),
+                 confusions=diff("counted donor atoms (NH2 = 1) instead of N-H/O-H bonds (Lipinski NHOH: NH2 = 2)",
+                                 Lipinski.NumHDonors)),
         PropSpec("hba", "How many Lipinski hydrogen-bond acceptors (the NO count: number of N and O atoms) does the "
                  "molecule with SMILES {smiles} have?", Kind.EXACT, None, Lipinski.NOCount,
                  confusions=diff("RDKit NumHAcceptors definition used instead of Lipinski NO count", Lipinski.NumHAcceptors)),

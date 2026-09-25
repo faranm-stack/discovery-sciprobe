@@ -211,8 +211,14 @@ def evaluate(probe: InvarianceProbe, agent: str, replies: list[tuple[Variant, Ag
         ex = extract(rep.text, dim)
         row["raw"] = None if ex.value is None else f"{ex.value} {ex.unit or ''}".strip()
         if ex.refused:
-            refused += 1
-            row["note"] = f"refused: {ex.reason}"
+            from .scoring import _ENV_FAILURE
+
+            if _ENV_FAILURE.search(ex.reason or ""):
+                errors += 1
+                row["note"] = f"environment: {ex.reason}"
+            else:
+                refused += 1
+                row["note"] = f"refused: {ex.reason}"
         elif ex.value is not None:
             try:
                 v = float(ex.value)
@@ -231,7 +237,12 @@ def evaluate(probe: InvarianceProbe, agent: str, replies: list[tuple[Variant, Ag
                   tolerance=tol, values=values, tags=list(probe.tags))
 
     if errors == len(replies):
-        return InvarianceResult(status=Status.ERROR, score=0.0, spread=None, diagnosis="all variants errored", **common)
+        return InvarianceResult(status=Status.ERROR, score=0.0, spread=None,
+                                diagnosis="all variants errored (environment/transport)", **common)
+    if errors and len(numeric) < 2:
+        return InvarianceResult(status=Status.ERROR, score=0.0, spread=None,
+                                diagnosis=f"{errors} variant(s) failed in the environment; too few answers to compare",
+                                **common)
     if refused and numeric:
         bad = [r["label"] for r in values if r["note"].startswith("refused")]
         return InvarianceResult(status=Status.FAIL, score=0.0, spread=None,

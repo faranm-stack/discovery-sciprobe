@@ -94,6 +94,27 @@ def test_refusal_when_answer_expected():
     assert v.status == Status.REFUSED
 
 
+@pytest.mark.parametrize("reason", [
+    "Psi4 execution backend failed repeatedly with an unexpected error",
+    "Prediction tool execution failed due to a backend error",
+    "No trained property model is available in the current workspace to run a prediction.",
+    "Computation environment error prevented calculating logP",
+])
+def test_environment_failures_are_errors_not_refusals(reason):
+    v = score_task(task(E_REF), AgentReply(text=f'ANSWER: {{"value": null, "reason": "{reason}"}}'), "x")
+    assert v.status == Status.ERROR and v.diagnosis.startswith("environment:")
+
+
+def test_environment_errors_do_not_lower_sciscore():
+    from sciprobe import report
+    from sciprobe.runner import RunResult
+
+    good = score_task(task(E_REF), reply(-76.0266, "hartree"), "a")
+    env = score_task(task(E_REF), AgentReply(text='ANSWER: {"value": null, "reason": "tool execution failed"}'), "a")
+    (card,) = report.scorecards(RunResult([good, env], []))
+    assert card.sciscore == 100.0 and card.errors == 1 and card.oracle_n == 1
+
+
 def test_transport_error():
     v = score_task(task(E_REF), AgentReply(text="", error="HTTP 500"), "x")
     assert v.status == Status.ERROR and v.diagnosis == "HTTP 500"

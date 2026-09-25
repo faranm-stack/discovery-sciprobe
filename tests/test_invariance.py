@@ -117,4 +117,6 @@ def test_evaluate_needs_two_answers():
     p = _probe()
     v = [Variant("a", "", "x"), Variant("b", "", "y")]
     res = evaluate(p, "a", [(v[0], _rep(-1.0)), (v[1], AgentReply(text="", error="boom"))])
-    assert res.status == Status.NO_ANSWER
+    assert res.status == Status.ERROR and "environment" in res.diagnosis
+    only_one = evaluate(p, "a", [(v[0], _rep(-1.0)), (v[1], AgentReply(text="I am not sure."))])
+    assert only_one.status == Status.NO_ANSWER

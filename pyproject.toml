@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "sciprobe"
 version = "0.1.0"
-description = "Ground-truth and invariance evaluation for scientific AI agents (Microsoft Discovery)"
+description = "Discovery SciProbe: ground-truth and invariance evaluation for scientific AI agents (Microsoft Discovery)"
 requires-python = ">=3.10"
 dependencies = ["rdkit>=2023.9"]
 

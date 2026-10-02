@@ -1,6 +1,8 @@
-# sciprobe
+# Discovery SciProbe
 
 Scientific evaluation for AI agents (built for Microsoft Discovery). It asks agents real science questions and checks their answers against ground truth, authoritative databases, and physics. LLM judges are used only as a last resort.
+
+Sister tool: [Discovery CatalogProbe](https://github.com/faranm-stack/discovery-catalogprobe) checks that agents and starter kits work; SciProbe checks that their answers are right. The Python package and CLI are still named `sciprobe`.
 
 ## Where questions come from (in priority order)
 

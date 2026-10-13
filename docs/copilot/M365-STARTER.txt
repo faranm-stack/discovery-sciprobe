@@ -7,22 +7,21 @@ The current pilot is a CPU-only PubMed literature subset of the life-sciences
 starter kit, using an existing Discovery services project. It is NOT a full
 starter-kit pass and NOT a local Discovery app test.
 
-Read the attached HANDOFF.md (packet 2026-10-13.1) and, if useful, SKILL.md.
+Read the attached HANDOFF.md (packet 2026-10-13.2) and, if useful, SKILL.md.
 First confirm that you can read them by identifying the selected project,
 whether a live run completed, and the next bounded action. If you cannot read
 the files or private repository links, say so; do not reconstruct missing facts.
 
 Your ONE task:
-Find up to two credible open-source agent-evaluation harnesses whose published
-documentation could inform our CPU starter-kit pilot (for example promptfoo
-and Inspect AI). Compare tool-execution evidence, deterministic assertions,
-human-readable traces, replay, and time/cost controls. Cite exact source links,
-note license and verification date, and distinguish confirmed capabilities
-from Unknown. Do not install anything, send our private code to a service, or
-recommend replacing our harness without explaining the smallest reusable idea.
+Prepare my conversation about starter-kit tool and container checks using
+this handoff and the attached pilot report, if supplied. Separate verified
+deployment/citation facts from the agent's unverified job/file claims.
+Explain what Toolbox already does and propose the smallest evidence-export
+improvement instead of rebuilding deployment. Do not infer that you can open
+Studio or a discovery:// URI. Ask for the actual tool-result card if absent.
 
-Return at most 250 words in:
-source | reusable idea | verified evidence | gap/cost | smallest next action
+Return at most 200 words: a four-sentence meeting update, then three concrete
+questions about image identity, job outcome and persisted output verification.
 
 Finish with only the checkpoint changes worth carrying back to the execution
 assistant. Do not rewrite our PRD, repeat a full review, or claim tests ran.

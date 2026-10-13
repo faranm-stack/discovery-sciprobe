@@ -1,6 +1,6 @@
 # Discovery probes: portable handoff
 
-Packet: `2026-10-13.1` | Canonical home: Discovery CatalogProbe
+Packet: `2026-10-13.2` | Canonical home: Discovery CatalogProbe
 
 This packet is copied to both private repositories so either project has a
 starting point. Update the canonical copy and deliberately synchronize the
@@ -55,24 +55,40 @@ records before quoting an exact total.
 | Workers | CatalogProbe has bounded async cases, not demonstrated multi-agent orchestration; keep one case |
 | Memory | Results/baselines exist; this packet adds cross-host continuity, not automatic synchronization |
 
-## 2026-10-13 preflight outcome
+## 2026-10-13 updated live pilot outcome
 
 - Intended target: the existing `PRValidation` project, not `RepoValidation`
   and not a newly created project.
-- Live Toolbox data-plane inventory read that project successfully but found
-  no matching `pubmed` agent. The shared PubMed tool exists in the selected
-  workspace. Azure CLI also reported the intended lab tenant/subscription.
-- This does NOT verify the tool image, CPU binding, storage access, current
-  model deployment, or Log Analytics permissions. A separate filtered inventory
-  query returned an empty result; it does not overturn the successful live
-  project read.
-- Read-only setup exceeded the requested 20-minute ceiling. Deployment and
-  model invocation were therefore NOT started. No compute job, new resource,
-  Studio conversation, scientific result, or demo pass was created.
-- No live job was started by this session. Do not interpret this as a statement
-  about unrelated jobs. No logs were queried and no billed usage was measured.
+- The earlier preflight-only attempt did not invoke an agent. The user later
+  renewed permission for one bounded live pilot. These are separate attempts.
+- Toolbox deployed and verified `pubmed` in PRValidation, using the existing
+  registered PubMed tool and existing `gpt-5-mini` model. No tool image build
+  or new storage container was part of the deployment.
+- Read-only ARM checks confirmed PubMed registration Succeeded, declared GPU
+  count zero, and a provisioned Standard_D4s_v6 CPU pool. The image is a mutable
+  `pubmed:latest` tag; its digest/startup were not captured.
+- One request was rejected before agent execution because our investigation
+  name was too long. Discovery requires 3-24 letters/digits/hyphens. After
+  correcting only that input, one REST invocation returned an answer.
+- The answer reports PubMed-ExecutepythonCode success, a 45.90-second compute
+  run, and final_results.json saved/shared. Those are agent-reported claims:
+  the exported Toolbox log contains messages, not the raw tool-result record.
+  Job success, actual compute-call count and file persistence are not yet
+  independently verified.
+- Both returned citation titles, PMIDs, years and DOIs were independently
+  matched against official PubMed ESummary metadata: PMID
+  [42865775](https://pubmed.ncbi.nlm.nih.gov/42865775/) and
+  [42864707](https://pubmed.ncbi.nlm.nih.gov/42864707/).
+  This was a direct metadata check, not a SciProbe grading run.
+- The Toolbox round-trip was 470,278 ms. Overall setup exceeded the requested
+  20-minute ceiling. Billed usage remains Unknown. No Log Analytics query,
+  CatalogProbe CLI run, full-kit test or Discovery app test was performed.
+- Azure CLI project GET returned Unauthorized while Toolbox access worked.
+  Cause unconfirmed; no permission change or identity-root-cause claim.
+- Raw transcript, metadata receipt and a readable report are retained in the
+  user's approved local evidence folder, not published to these repositories.
 
-## Next bounded demonstration
+## Pilot scope and next action
 
 One CPU-only **literature subset** of
 [life-sciences sample sp-4](https://github.com/microsoft/discovery/blob/main/starter-kits/life-sciences/kit.json),
@@ -80,19 +96,13 @@ using PubMed. The complete sample also asks for ongoing clinical trials; that
 part is explicitly excluded from this first case. The rest of the kit,
 including GPU agents, remains untested.
 
-1. Verify current project, PubMed tool definition/image, CPU node pool, model,
-   existing output storage and absence of a conflicting deployment.
-2. With fresh scoped approval, deploy only PubMed using the existing tool and
-   resources. Record the actual catalog and deployed image identities.
-3. Submit ONE named investigation/conversation in Studio through Toolbox REST.
-   No transport failover, new packages, GPU, repeated calls or permission fixes.
-4. Capture returned IDs, paired tool calls/results, terminal state and actual
-   outputs. Check up to two PMIDs/titles against PubMed. Do not count answer
-   prose as proof of tool success. Label replay/CLI/manual grading accurately.
-5. Save a human-readable report and exact returned Studio link, if available.
-   A guessed deep link is not evidence. If blocked, preserve the error and stop.
+**Do not rerun first.** Inspect the existing Studio conversation in PRValidation,
+investigation `cp-bio-1013-1440`, for its actual tool-result card and output JSON.
+Capture job/correlation ID, terminal state, image identity and output contents.
+Then update only the evidence gaps above. The local receipt holds the returned
+conversation ID and resource URI.
 
-Prepared prompt (not executed):
+Prompt-scope summary (the original Toolbox transcript retains the full submitted text):
 
 > CPU-only literature smoke test for the life-sciences kit. Use your existing
 > PubMed tool to find at most two publications about GLP-1 receptor agonists
@@ -112,13 +122,12 @@ The offline checks and graders exist. For the next demo we're selecting the
 CPU PubMed part of the life-sciences starter kit, not deploying all 20 agents.
 We will show the real Studio conversation, tool outcome and citation checks."
 
-"Today's access checks found the project and existing PubMed tool, but the
-agent is not deployed there and no live test completed within the timebox.
-The next action is one approved load-and-invoke test, with no GPU or new
-infrastructure. We now keep the workflow and checkpoint in both repos so
-Microsoft 365 Copilot can help with planning and reporting without restarting
-the investigation. App support and combined extension packaging remain future
-work."
+"We have now loaded the biology agent and received a real Studio answer.
+Both returned citation identities match PubMed. The agent reports its CPU tool
+ran and saved a result, but we still need the actual job receipt and file to
+independently confirm those parts. This is partial starter-kit coverage, not
+a whole-kit pass. We will inspect that existing evidence before spending tokens
+on another run. App support and extension packaging remain future work."
 
 ## Routing, persistence and resumption
 

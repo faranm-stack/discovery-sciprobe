@@ -1,0 +1,33 @@
+Use my approved Microsoft 365 work-account context. Do not start paid agents,
+enable connectors, publish, deploy, run code, or change permissions.
+
+I am building Discovery CatalogProbe and Discovery SciProbe test harnesses.
+CatalogProbe checks functional behavior; SciProbe grades scientific answers.
+The current pilot is a CPU-only PubMed literature subset of the life-sciences
+starter kit, using an existing Discovery services project. It is NOT a full
+starter-kit pass and NOT a local Discovery app test.
+
+Read the attached HANDOFF.md (packet 2026-10-13.1) and, if useful, SKILL.md.
+First confirm that you can read them by identifying the selected project,
+whether a live run completed, and the next bounded action. If you cannot read
+the files or private repository links, say so; do not reconstruct missing facts.
+
+Your ONE task:
+Find up to two credible open-source agent-evaluation harnesses whose published
+documentation could inform our CPU starter-kit pilot (for example promptfoo
+and Inspect AI). Compare tool-execution evidence, deterministic assertions,
+human-readable traces, replay, and time/cost controls. Cite exact source links,
+note license and verification date, and distinguish confirmed capabilities
+from Unknown. Do not install anything, send our private code to a service, or
+recommend replacing our harness without explaining the smallest reusable idea.
+
+Return at most 250 words in:
+source | reusable idea | verified evidence | gap/cost | smallest next action
+
+Finish with only the checkpoint changes worth carrying back to the execution
+assistant. Do not rewrite our PRD, repeat a full review, or claim tests ran.
+
+Reusable switch-host rule:
+For later tasks replace only the ONE task paragraph. Keep source revisions,
+accepted limits, failures and outstanding decisions. A handoff transfers
+context, not permissions, credentials, model credits or execution proof.
